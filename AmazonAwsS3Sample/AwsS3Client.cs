@@ -1,8 +1,5 @@
-﻿using Amazon.S3;
-using Amazon.S3.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -30,7 +27,7 @@ namespace Enginesoft.AmazonAwsS3Sample
             }
         }
 
-        public void UploadImage(string bucketName, Image image, System.Drawing.Imaging.ImageFormat imageFormat, string serverPath, int? cacheControlMaxAgeSeconds = null)
+        public void UploadImage(string bucketName, System.Drawing.Image image, System.Drawing.Imaging.ImageFormat imageFormat, string serverPath, int? cacheControlMaxAgeSeconds = null)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -43,9 +40,9 @@ namespace Enginesoft.AmazonAwsS3Sample
         {
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjSingleOpNET.html
                         
-            using (var client = new AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
             {
-                PutObjectRequest putRequest2 = new PutObjectRequest
+                var putRequest2 = new Amazon.S3.Model.PutObjectRequest
                 {
                     BucketName = bucketName,
                     Key = serverPath,
@@ -55,7 +52,7 @@ namespace Enginesoft.AmazonAwsS3Sample
                 if (cacheControlMaxAgeSeconds.HasValue)
                     putRequest2.Headers.CacheControl = string.Format("max-age={0}, public", cacheControlMaxAgeSeconds);
 
-                PutObjectResponse response2 = client.PutObject(putRequest2);
+                var response2 = client.PutObject(putRequest2);
             }
         }
 
@@ -68,9 +65,9 @@ namespace Enginesoft.AmazonAwsS3Sample
 
             var region = Amazon.RegionEndpoint.GetBySystemName(this.Credential.Region);
 
-            using (var client = new AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
             {
-                ListObjectsRequest request = new ListObjectsRequest
+                var request = new Amazon.S3.Model.ListObjectsRequest
                 {
                     BucketName = bucketName,
                     MaxKeys = 10,
@@ -79,10 +76,10 @@ namespace Enginesoft.AmazonAwsS3Sample
 
                 do
                 {
-                    ListObjectsResponse response = client.ListObjects(request);
+                    var response = client.ListObjects(request);
 
                     // Process response
-                    foreach (S3Object entry in response.S3Objects)
+                    foreach (Amazon.S3.Model.S3Object entry in response.S3Objects)
                     {
                         if (entry.Key == serverFolder || entry.Key == string.Format("{0}/", serverFolder) || entry.Key == string.Format("/{0}", serverFolder))
                             continue; //Folder
@@ -117,9 +114,9 @@ namespace Enginesoft.AmazonAwsS3Sample
         {
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/DeletingOneObjectUsingNetSDK.html
                         
-            using (var client = new AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
             {
-                DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest
+                var deleteObjectRequest = new Amazon.S3.Model.DeleteObjectRequest
                 {
                     BucketName = bucketName,
                     Key = keyName
@@ -136,9 +133,9 @@ namespace Enginesoft.AmazonAwsS3Sample
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/RetrievingObjectUsingNetSDK.html
             
             int count = 0;
-            using (var client = new AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
             {
-                ListObjectsRequest request = new ListObjectsRequest
+                var request = new Amazon.S3.Model.ListObjectsRequest
                 {
                     BucketName = bucketName,
                     MaxKeys = 10,
@@ -147,10 +144,10 @@ namespace Enginesoft.AmazonAwsS3Sample
 
                 do
                 {
-                    ListObjectsResponse response = client.ListObjects(request);
+                    var response = client.ListObjects(request);
 
                     // Process response
-                    foreach (S3Object entry in response.S3Objects)
+                    foreach (Amazon.S3.Model.S3Object entry in response.S3Objects)
                     {
                         if (entry.Key == serverFolder || entry.Key == string.Format("{0}/", serverFolder) || entry.Key == string.Format("/{0}", serverFolder))
                             continue; //Folder
