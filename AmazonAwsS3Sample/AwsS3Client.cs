@@ -39,8 +39,9 @@ namespace Enginesoft.AmazonAwsS3Sample
         public void UploadStream(string bucketName, System.IO.Stream stream, string serverPath, int? cacheControlMaxAgeSeconds = null)
         {
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjSingleOpNET.html
-                        
-            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+
+            var region = Amazon.RegionEndpoint.GetBySystemName(this.Credential.Region);
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
             {
                 var putRequest2 = new Amazon.S3.Model.PutObjectRequest
                 {
@@ -64,7 +65,6 @@ namespace Enginesoft.AmazonAwsS3Sample
             int count = 0;
 
             var region = Amazon.RegionEndpoint.GetBySystemName(this.Credential.Region);
-
             using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
             {
                 var request = new Amazon.S3.Model.ListObjectsRequest
@@ -113,8 +113,9 @@ namespace Enginesoft.AmazonAwsS3Sample
         public void DeleteItem(string bucketName, string keyName)
         {
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/DeletingOneObjectUsingNetSDK.html
-                        
-            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+
+            var region = Amazon.RegionEndpoint.GetBySystemName(this.Credential.Region);
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
             {
                 var deleteObjectRequest = new Amazon.S3.Model.DeleteObjectRequest
                 {
@@ -133,7 +134,8 @@ namespace Enginesoft.AmazonAwsS3Sample
             //ref: http://docs.aws.amazon.com/AmazonS3/latest/dev/RetrievingObjectUsingNetSDK.html
             
             int count = 0;
-            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, this.Credential.Region))
+            var region = Amazon.RegionEndpoint.GetBySystemName(this.Credential.Region);
+            using (var client = new Amazon.S3.AmazonS3Client(this.Credential.AcesssKey, this.Credential.SecretKey, region))
             {
                 var request = new Amazon.S3.Model.ListObjectsRequest
                 {
